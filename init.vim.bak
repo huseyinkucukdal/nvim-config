@@ -1,0 +1,22 @@
+set number
+set relativenumber
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set mouse=a
+syntax on
+filetype plugin indent on
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " Syntax highlight
+Plug 'neoclide/coc.nvim', {'branch': 'release'}              " VSCode tarzı akıllı tamamlama
+Plug 'preservim/nerdtree'                                    " Dosya gezgini
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }          " Dosya bulma
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'                                    " Git entegrasyonu
+Plug 'morhetz/gruvbox'                                       " Tema
+
+call plug#end()
+
+colorscheme gruvbox

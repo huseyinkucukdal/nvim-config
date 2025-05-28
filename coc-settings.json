@@ -1,0 +1,12 @@
+{
+    "languageserver": {
+      "csharp": {
+        "command": "omnisharp",
+        "filetypes": ["cs"],
+        "rootPatterns": [".sln"],
+        "trace.server": "verbose",
+        "enable": true
+      }
+    }
+  }
+  
