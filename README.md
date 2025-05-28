@@ -12,7 +12,7 @@
 :PackerSync
 ```
 
-:PackerSync will
+`:PackerSync` will
 
 - remove plugins that are no longer listed (clean),
 
