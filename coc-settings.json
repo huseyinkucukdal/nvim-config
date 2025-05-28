@@ -1,12 +1,17 @@
 {
-    "languageserver": {
-      "csharp": {
-        "command": "omnisharp",
-        "filetypes": ["cs"],
-        "rootPatterns": [".sln"],
-        "trace.server": "verbose",
-        "enable": true
-      }
+  "languageserver": {
+    "csharp": {
+      "command": "omnisharp",
+      "filetypes": ["cs"],
+      "rootPatterns": [".sln"],
+      "trace.server": "verbose",
+      "enable": true
+    },
+    "tsserver": {
+      "command": "typescript-language-server",
+      "args": ["--stdio"],
+      "filetypes": ["typescript", "typescriptreact", "javascript", "javascriptreact"],
+      "rootPatterns": ["package.json", "tsconfig.json", ".git"]
     }
   }
-  
+}
