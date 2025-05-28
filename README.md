@@ -3,10 +3,12 @@
 ## Setup
 
 1. Clone this repo into your Neovim config folder
-   ```bash
-   git clone https://github.com/huseyinkucukdal/nvim-config ~/.config/nvim
-   ```
-   Open Neovim and run one command:
+
+```bash
+git clone https://github.com/huseyinkucukdal/nvim-config ~/.config/nvim
+```
+
+2. Open Neovim and run one command:
 
 ```
 :PackerSync
