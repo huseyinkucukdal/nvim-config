@@ -46,11 +46,45 @@ require("packer").startup(function(use)
     use "windwp/nvim-autopairs"
     use "kylechui/nvim-surround"
     use "numToStr/Comment.nvim"
+    use "hrsh7th/cmp-buffer"
+    use "hrsh7th/cmp-path"
+    use "saadparwaiz1/cmp_luasnip"
+
+    use({
+      "nvimtools/none-ls.nvim",
+      requires = { "nvim-lua/plenary.nvim" },
+    })
+    
+    require("null-ls").setup({
+      sources = {
+        require("null-ls").builtins.formatting.prettier,
+        require("null-ls").builtins.formatting.csharpier,
+      },
+      on_attach = on_attach,
+    })
+    
+    use {
+      "williamboman/mason.nvim",
+      config = function() require("mason").setup() end
+    }
+    use {
+      "williamboman/mason-lspconfig.nvim",
+      config = function()
+        require("mason-lspconfig").setup({
+          ensure_installed = { "tsserver", "omnisharp", "sqls" }
+        })
+      end
+    }
 
   if packer_bootstrap then
     require("packer").sync()
   end
 end)
+
+require("nvim-treesitter.configs").setup({
+  ensure_installed = { "typescript", "tsx", "javascript", "c_sharp", "sql", "lua", "json" },
+  highlight = { enable = true }
+})
 
 -- Tema
 vim.cmd("colorscheme gruvbox")
@@ -79,26 +113,44 @@ require("Comment").setup {}
 -- LSP Ayarlari
 local lspconfig = require("lspconfig")
 
+local on_attach = function(_, bufnr)
+  local opts = { noremap=true, silent=true, buffer=bufnr }
+  local map = vim.keymap.set
+  map('n', 'gd', vim.lsp.buf.definition, opts)
+  map('n', 'gr', vim.lsp.buf.references,  opts)
+  map('n', 'K',  vim.lsp.buf.hover,       opts)
+  map('n', '<leader>rn', vim.lsp.buf.rename, opts)
+end
+
+
 lspconfig.omnisharp.setup({
   cmd = { "omnisharp", "--languageserver" , "--hostPID", tostring(vim.fn.getpid()) },
   filetypes = { "cs", "vb" },
-  root_dir = lspconfig.util.root_pattern(".sln", ".csproj")
+  root_dir = lspconfig.util.root_pattern(".sln", ".csproj"),
+  on_attach = on_attach
 })
 
--- lspconfig.tsserver.setup({})
-lspconfig.tsserver = nil
-lspconfig.ts_ls.setup({})
+lspconfig.tsserver.setup({
+  filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+  root_dir  = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
+  on_attach = on_attach
+})
 
 -- Otomatik Tamamlama
 local cmp = require("cmp")
-cmp.setup({
+cmp.setup({  snippet = {
+    expand = function(args) require("luasnip").lsp_expand(args.body) end,
+  },
   mapping = cmp.mapping.preset.insert({
     ["<Tab>"] = cmp.mapping.select_next_item(),
     ["<S-Tab>"] = cmp.mapping.select_prev_item(),
     ["<CR>"] = cmp.mapping.confirm({ select = true }),
   }),
   sources = {
-    { name = "nvim_lsp" }
+    { name = "nvim_lsp" },
+    { name = "luasnip"  },
+    { name = "buffer"   },
+    { name = "path"     }
   }
 })
 
